@@ -11,15 +11,15 @@ export default class  TodoServiceImpl implements TodoService {
     }
 
     async createTodo(title: string, message: string): Promise<Todo> {
-        const todo =  await this.todoRepository.createTodo(title, message);
-        return todo;
+
+        return await this.todoRepository.createTodo(title, message);
     }
 
     async getAllTodos(): Promise<Todo[]> {
         return await this.todoRepository.getAllTodos();
     }
 
-    async updateTodo(id: number, title: string, message: string, isCompleted: boolean): Promise<NewTaskDto> {
+    async updateTodo(id: number, title: string, message: string, isCompleted: boolean): Promise<Todo> {
         const todo = await this.todoRepository.getTodoById(id);
         if (!todo) {
             throw new Error(`Todo with id ${id} not found`);
@@ -29,6 +29,18 @@ export default class  TodoServiceImpl implements TodoService {
         todo.isCompleted = isCompleted;
         // const updateTodo = await this.todoRepository.updateTodo(todo);
         return await this.todoRepository.updateTodo(todo) ;
+    }
+
+    async deleteTodo(id: number): Promise<boolean> {
+        const todo =await  this.todoRepository.getTodoById(id);
+        if (!todo) {
+            throw new Error(`Todo with id ${id} not found`);
+        }
+        return !! ( await this.todoRepository.deleteTodo(id)).affected
+    }
+
+    getAllTodosByStatus(status: boolean): Promise<Todo[]> {
+        return Promise.resolve([]);
     }
 
 

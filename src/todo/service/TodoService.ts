@@ -7,5 +7,9 @@ export default interface TodoService{
 
     getAllTodos(): Promise<Todo[]>;
 
-    updateTodo(id: number, title: string, message: string, isCompleted: boolean): Promise<NewTaskDto>;
+    updateTodo(id: number, title: string, message: string, isCompleted: boolean): Promise<Todo>;
+
+    deleteTodo(id: number): Promise<boolean>;
+
+    getAllTodosByStatus(status: boolean): Promise<Todo[]>;
 }

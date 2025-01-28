@@ -15,11 +15,16 @@ export default class TodoRepository {
         });
     }
 
-    async getTodoById(id: number): Promise< Todo| null> {
+    async getTodoById(id: number) {
         return this.repository.findOne({where: {id}});
     }
 
-    async updateTodo(todo: Todo) : Promise < Todo> {
+    async updateTodo(todo: Todo) {
         return this.repository.save(todo)
+    }
+
+
+    async deleteTodo(id: number) {
+        return  this.repository.delete(id);
     }
 }

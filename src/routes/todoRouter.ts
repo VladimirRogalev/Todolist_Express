@@ -18,19 +18,19 @@ const todoController = new TodoController(todoService);
 
 
 router.post('',
-    body("title").isString().notEmpty(),
+    body('title').isString().notEmpty(),
     body('message').isString().notEmpty(),
     validationMiddleware,
-    expressAsyncHandler (async  (req, res) => {
-    const newTodo = req.body as NewTaskDto;
-    const createTodo = await todoController.createTodo(newTodo.title, newTodo.message);
-    res.status(200).json(createTodo);
-    //newTodo.title
-} ))
+    expressAsyncHandler(async (req, res) => {
+        const newTodo = req.body as NewTaskDto;
+        const createTodo = await todoController.createTodo(newTodo.title, newTodo.message);
+        res.status(200).json(createTodo);
+        //newTodo.title
+    }));
 
 router.get('', expressAsyncHandler(async (req, res) => {
-    const todos = await todoController.getAllTodos();
-    res.status(200).json(todos)
+    const allTodos = await todoController.getAllTodos();
+    res.status(200).json(allTodos);
 }));
 router.put('/:id',
     param('id').isInt().notEmpty(),
@@ -40,10 +40,29 @@ router.put('/:id',
         const todoDto = req.body as UpdateTaskDto;
         const todo: NewTaskDto = await todoController.updateTodo(id, todoDto);
         if (todo) {
-            res.status(200).send(todo)
+            res.status(200).send(todo);
         } else {
             throw new Error(`Todo id: ${id} was not found`);
         }
-    })
+    });
+router.delete('/:id', param('id').isInt().notEmpty(), validationMiddleware, expressAsyncHandler(async (req, res, next) => {
+    const id = +req.params.id;
+    const result:boolean = await todoController.deleteTodo(id);
+    res.status(200).send(result);
+
+
+}));
+router.get('/:status',
+    // param('id').isInt().notEmpty(),
+    validationMiddleware,
+    async (req, res) => {
+        const status = !!req.params.status;
+        const todos = await todoController.getAllTodosByStatus(status);
+        if (todos) {
+            res.status(200).send(todos);
+        } else {
+            throw new Error(`Todo id: ${status} was not found`);
+        }
+    });
 
 export default router;

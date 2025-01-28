@@ -1,4 +1,4 @@
-import express, {Application} from 'express';
+import express, {Application, NextFunction, Response, Request} from 'express';
 import {initDB} from './todo/dao/db';
 import todoRouter from './routes/todoRouter';
 
@@ -11,10 +11,10 @@ app.use(express.json());
 
 app.use('/todos', todoRouter);
 
-// app.use((err:Error, req: Request, res: Response, next: NextFunction)=> {
-//     console.log(err.message);
-//     res.status(400).json({error: err.message});
-// })
+app.use((err:Error, req: Request, res: Response, next: NextFunction)=> {
+    console.log(err.message);
+    res.status(400).json({error: err.message});
+})
 async function startServer() {
     await initDB();
 
