@@ -1,12 +1,13 @@
 import {Router} from 'express';
 import expressAsyncHandler from 'express-async-handler';
-import NewTaskDto from '../todo/dto/NewTaskDto';
+import NewTodoDto from '../todo/dto/NewTodoDto';
 import TodoController from '../todo/controller/TodoController';
 import TodoServiceImpl from '../todo/service/TodoServiceImpl';
 import TodoRepository from '../todo/dao/TodoRepository';
 import {body, param} from 'express-validator';
 import validationMiddleware from '../todo/middleware/validationMiddleware';
-import UpdateTaskDto from '../todo/dto/UpdateTaskDto';
+import UpdateTodoDto from '../todo/dto/UpdateTodoDto';
+import {Todo} from '../todo/model/Todo';
 
 
 const router = Router();
@@ -22,7 +23,7 @@ router.post('',
     body('message').isString().notEmpty(),
     validationMiddleware,
     expressAsyncHandler(async (req, res) => {
-        const newTodo = req.body as NewTaskDto;
+        const newTodo = req.body as NewTodoDto;
         const createTodo = await todoController.createTodo(newTodo.title, newTodo.message);
         res.status(200).json(createTodo);
         //newTodo.title
@@ -33,36 +34,34 @@ router.get('', expressAsyncHandler(async (req, res) => {
     res.status(200).json(allTodos);
 }));
 router.put('/:id',
-    param('id').isInt().notEmpty(),
     validationMiddleware,
-    async (req, res) => {
-        const id = +req.params.id;
-        const todoDto = req.body as UpdateTaskDto;
-        const todo: NewTaskDto = await todoController.updateTodo(id, todoDto);
+    expressAsyncHandler
+    (async (req, res) => {
+        const id = req.params.id;
+        const todoDto = req.body as UpdateTodoDto;
+        const todo: Todo = await todoController.updateTodo(id, todoDto);
         if (todo) {
             res.status(200).send(todo);
         } else {
             throw new Error(`Todo id: ${id} was not found`);
         }
-    });
+    }));
 router.delete('/:id', param('id').isInt().notEmpty(), validationMiddleware, expressAsyncHandler(async (req, res, next) => {
-    const id = +req.params.id;
-    const result:boolean = await todoController.deleteTodo(id);
+    const id = req.params.id;
+    const result: boolean = await todoController.deleteTodo(id);
     res.status(200).send(result);
 
 
 }));
+
 router.get('/:status',
-    // param('id').isInt().notEmpty(),
     validationMiddleware,
-    async (req, res) => {
+    expressAsyncHandler
+    (async (req, res) => {
         const status = !!req.params.status;
         const todos = await todoController.getAllTodosByStatus(status);
-        if (todos) {
-            res.status(200).send(todos);
-        } else {
-            throw new Error(`Todo id: ${status} was not found`);
-        }
-    });
+        res.status(200).send(todos);
+
+    }));
 
 export default router;

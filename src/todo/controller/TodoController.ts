@@ -1,13 +1,12 @@
 import TodoService from '../service/TodoService';
-import NewTaskDto from '../dto/NewTaskDto';
-import UpdateTaskDto from '../dto/UpdateTaskDto';
+import UpdateTodoDto from '../dto/UpdateTodoDto';
 import {Todo} from '../model/Todo';
 
 export default class TodoController {
     private todoService: TodoService;
 
     constructor(todoService: TodoService) {
-    this.todoService = todoService;
+        this.todoService = todoService;
     }
 
     async createTodo(title: string, message: string) {
@@ -18,16 +17,15 @@ export default class TodoController {
         return await this.todoService.getAllTodos();
     }
 
-     async updateTodo(id: number, todoDto: UpdateTaskDto):Promise<Todo> {
-        return  await this.todoService.updateTodo(id, todoDto.title, todoDto.message, todoDto.isCompleted);
+    async updateTodo(id: string, todoDto: UpdateTodoDto): Promise<Todo> {
+        return await this.todoService.updateTodo(id, todoDto.title, todoDto.message, todoDto.isCompleted);
     }
 
-    async deleteTodo(id: number): Promise<boolean> {
-
+    async deleteTodo(id: string): Promise<boolean> {
         return await this.todoService.deleteTodo(id);
     }
 
-    async getAllTodosByStatus(status: boolean) :Promise<Todo[]> {
+    async getAllTodosByStatus(status: boolean): Promise<Todo[]> {
         return await this.todoService.getAllTodosByStatus(status);
     }
 }

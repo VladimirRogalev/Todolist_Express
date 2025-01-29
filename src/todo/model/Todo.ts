@@ -1,10 +1,10 @@
-import {BaseEntity, Column, Entity, PrimaryGeneratedColumn} from 'typeorm';
+import {BaseEntity, Column, Entity, ObjectId, ObjectIdColumn} from 'typeorm';
 
 
 @Entity ('todos_express')
 export  class Todo{
-    @PrimaryGeneratedColumn()
-    id!: number;
+    @ObjectIdColumn()
+    id!: ObjectId;
 
     @Column()
     title!: string;

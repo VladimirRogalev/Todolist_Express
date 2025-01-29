@@ -1,5 +1,5 @@
 import {Todo} from '../model/Todo';
-import NewTaskDto from '../dto/NewTaskDto';
+import NewTodoDto from '../dto/NewTodoDto';
 
 export default interface TodoService{
 
@@ -7,9 +7,9 @@ export default interface TodoService{
 
     getAllTodos(): Promise<Todo[]>;
 
-    updateTodo(id: number, title: string, message: string, isCompleted: boolean): Promise<Todo>;
+    updateTodo(id: string, title: string, message: string, isCompleted: boolean): Promise<Todo>;
 
-    deleteTodo(id: number): Promise<boolean>;
+    deleteTodo(id: string): Promise<boolean>;
 
-    getAllTodosByStatus(status: boolean): Promise<Todo[]>;
+    getAllTodosByStatus(status: string): Promise<Todo[]>;
 }
